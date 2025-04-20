@@ -1,0 +1,70 @@
+<div *ngIf="isChatOpen" class="chat-container">
+  <div class="chat-header">
+    <img
+      src="assets/images/avatar.png"
+      alt="Assistant Avatar"
+      class="chat-avatar"
+    />
+    <span>Chat with Assistant</span>
+    <button (click)="closeChat()">×</button>
+  </div>
+
+  <div class="chat-body">
+    <div *ngFor="let message of messages">
+      <div
+        class="message-wrapper"
+        [ngClass]="{
+          'align-right': message.sender === 'You',
+          'align-left': message.sender === 'Bot'
+        }"
+      >
+        <div
+          *ngIf="message.text"
+          class="message-wrapper"
+          [ngClass]="{
+            'align-right': message.sender === 'You',
+            'align-left': message.sender === 'Bot'
+          }"
+        >
+          <div
+            class="message-container"
+            [ngClass]="
+              message.sender === 'You' ? 'user-message' : 'bot-message'
+            "
+          >
+            <div class="message-text">{{ message.text }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bot image -->
+      <div *ngIf="message.image" class="bot-image">
+        <img [src]="message.image" alt="Bot image" />
+      </div>
+
+      <!-- Suggested reply buttons -->
+      <div *ngIf="message.isButtonGroup" class="button-stack">
+        <button
+          *ngFor="let btn of message.buttons"
+          (click)="handleButtonClick(btn.payload, btn.title)"
+        >
+          {{ btn.title }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div *ngIf="isTyping" class="typing-indicator">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <input
+      type="text"
+      [(ngModel)]="userMessage"
+      placeholder="Type your message..."
+    />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>

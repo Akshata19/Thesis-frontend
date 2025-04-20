@@ -1,0 +1,14 @@
+.profile-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; // or center if you want vertical centering
+  background-color: #f5f7fa; // light background
+
+  padding-top: 3rem; // give breathing room at the top
+}
+
+.container {
+  max-width: 1000px;
+  width: 100%;
+}

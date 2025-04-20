@@ -1,0 +1,24 @@
+<div *ngIf="categories" class="row gx-1 gy-2">
+  <div *ngFor="let category of categories" class="col-md-6 col-lg-4">
+    <div
+      class="category-nike-card position-relative text-white rounded overflow-hidden shadow-sm"
+    >
+      <img
+        [src]="getImagePath(category.name)"
+        [alt]="category.name"
+        class="img-fluid w-100 h-100 object-fit-cover"
+      />
+      <div class="overlay p-4">
+        <p class="small fw-light mb-1">Top Picks</p>
+        <h5 class="fw-bold mb-2">{{ category.name }}</h5>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="navigateToCategory(category._id)"
+        >
+          Explore
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

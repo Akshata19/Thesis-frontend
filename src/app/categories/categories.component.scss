@@ -1,0 +1,41 @@
+.category-nike-card {
+  height: 350px;
+  background-color: #000;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 5px;
+
+  img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: white;
+
+    h5 {
+      font-size: 1.3rem;
+    }
+
+    button {
+      background-color: #fff !important;
+      color: #000 !important;
+      font-weight: 500;
+      font-size: 0.9rem;
+      border-radius: 25px;
+    }
+  }
+}

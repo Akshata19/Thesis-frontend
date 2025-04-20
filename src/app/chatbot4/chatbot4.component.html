@@ -1,0 +1,174 @@
+<div *ngIf="isChatOpen && !isMinimized" class="chat-container">
+  <div class="chat-header">
+    <img
+      src="assets/images/avatar.png"
+      alt="Assistant Avatar"
+      class="chat-avatar"
+    />
+    <span>Ira</span>
+    <div class="header-menu-wrapper">
+      <button class="burger-button" (click)="openMenu()">
+        <svg
+          width="20"
+          height="20"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+          fill="white"
+        >
+          <path
+            d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"
+          />
+        </svg>
+      </button>
+
+      <!-- Persistent menu dropdown below the icon -->
+      <div class="persistent-menu-header" *ngIf="showMenu">
+        <ul>
+          <li (click)="confirmEndChat()">End Chat</li>
+          <li (click)="menuOptions()">Menu Options</li>
+        </ul>
+      </div>
+    </div>
+    <button class="minimize-button" (click)="minimize.emit()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+        fill="white"
+      >
+        <path
+          d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <div class="chat-body" #chatBody>
+    <div *ngFor="let message of messages">
+      <div
+        class="message-wrapper"
+        [ngClass]="{
+          'align-right': message.sender === 'You',
+          'align-left': message.sender === 'Bot'
+        }"
+      >
+        <ng-container
+          *ngIf="message.sender === 'Bot' && !message.isButtonGroup"
+        >
+          <div class="image-avatar">
+            <img src="assets/images/avatar.png" alt="Bot Avatar" />
+          </div>
+        </ng-container>
+
+        <div
+          *ngIf="message.text"
+          class="message-wrapper"
+          [ngClass]="{
+            'align-right': message.sender === 'You',
+            'align-left': message.sender === 'Bot'
+          }"
+        >
+          <div
+            class="message-container"
+            [ngClass]="
+              message.sender === 'You' ? 'user-message' : 'bot-message'
+            "
+          >
+            <div class="message-text">{{ message.text }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="message.isButtonGroup" class="button-stack">
+        <button
+          *ngFor="let btn of message.buttons"
+          (click)="handleButtonClick(btn.payload, btn.title)"
+        >
+          {{ btn.title }}
+        </button>
+      </div>
+
+      <div
+        *ngIf="!message.isButtonGroup"
+        class="message-timestamp"
+        [ngClass]="{
+          'timestamp-right': message.sender === 'You',
+          'timestamp-left': message.sender === 'Bot'
+        }"
+      >
+        {{ message.time }}
+        <span *ngIf="message.sender === 'Bot'" class="bot-name"> • Ira</span>
+      </div>
+    </div>
+    <div class="message-wrapper align-left" *ngIf="isTyping">
+      <div class="message-container bot-message">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isTyping" class="processing-text">Processing...</div>
+  </div>
+
+  <div class="chat-footer">
+    <label class="attach-button">
+      <input type="file" hidden (change)="handleFileUpload($event)" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+        <path
+          d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z"
+        />
+      </svg>
+    </label>
+
+    <div class="input-with-button">
+      <input
+        type="text"
+        [(ngModel)]="userMessage"
+        placeholder="Type your message..."
+        (keydown.enter)="sendMessage()"
+      />
+      <button class="send-button" (click)="sendMessage()" title="Send">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+          <path
+            d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480l0-83.6c0-4 1.5-7.8 4.2-10.8L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z"
+          />
+        </svg>
+      </button>
+    </div>
+    <!-- <button (click)="sendMessage()">Send</button> -->
+  </div>
+
+  <div class="confirmation-content" *ngIf="showConfirmationDialog">
+    <div style="font-size: 15px">Do you really want to close the chat?</div>
+    <div class="confirmation-buttons">
+      <button class="confirm-btn" (click)="endChatConfirmed()">
+        Close the chat
+      </button>
+      <button class="cancel-btn" (click)="cancelEndChat()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="feedback-dialog" *ngIf="showFeedbackDialog">
+    <div class="feedback-title">Please rate your chat experience</div>
+    <div class="star-rating">
+      <svg
+        *ngFor="let star of [1, 2, 3, 4, 5]"
+        (click)="setRating(star)"
+        [ngClass]="{ filled: star <= feedbackRating }"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 576 512"
+      >
+        <path
+          d="M287.9 17.8L354 150l146.2 21.3c26.2 3.8 36.7 36 17.7 54.6L423.2 347.8 447.8 494c4.5 26.2-23 46-46.4 33.7L288 439.6 174.6 527.6c-23.3 12.3-50.8-7.5-46.4-33.7l24.6-146.2L58.1 226c-19-18.6-8.5-50.8 17.7-54.6L222 150l66.1-132.2c11.7-23.4 45.6-23.4 57.3 0z"
+        />
+      </svg>
+    </div>
+    <div class="feedback-buttons">
+      <button (click)="submitFeedback()">Submit</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="isMinimized" class="chat-minimized" (click)="restoreChat()">
+  <img src="assets/images/chat.png" alt="Chatbot Icon" />
+</div>

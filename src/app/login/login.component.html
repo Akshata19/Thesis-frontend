@@ -1,0 +1,77 @@
+<div class="login-wrapper">
+  <div class="login-card shadow">
+    <h3 class="text-center text-primary fw-bold mb-4">
+      <i class="fas fa-sign-in-alt me-2"></i>Login
+    </h3>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email -->
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+        />
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors?.['required']">Email is required</div>
+          <div *ngIf="f['email'].errors?.['email']">Invalid email</div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group mb-4">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="showPassword = !showPassword"
+          >
+            <i
+              class="fa"
+              [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+            ></i>
+          </button>
+        </div>
+        <div
+          *ngIf="submitted && f['password'].errors"
+          class="invalid-feedback d-block mt-1"
+        >
+          <div *ngIf="f['password'].errors?.['required']">
+            Password is required
+          </div>
+          <div *ngIf="f['password'].errors?.['minlength']">
+            Min 6 characters
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100 d-flex justify-content-center align-items-center"
+        [disabled]="loading"
+      >
+        <i class="fas fa-sign-in-alt me-2"></i> Login
+      </button>
+
+      <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+    </form>
+
+    <div class="text-center mt-3">
+      Don’t have an account?
+      <a routerLink="/register" class="text-primary fw-semibold"
+        >Register here</a
+      >.
+    </div>
+  </div>
+</div>

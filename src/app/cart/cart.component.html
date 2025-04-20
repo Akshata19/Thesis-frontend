@@ -1,0 +1,59 @@
+<div class="cart-container">
+  <div class="container">
+    <h2 class="cart-title text-center">
+      <i class="fas fa-shopping-cart me-2 text-primary"></i>Your Cart
+    </h2>
+
+    <div *ngIf="cartItems.length === 0" class="alert alert-info empty-cart">
+      <i class="fas fa-info-circle me-2"></i>
+      No items in your cart.
+      <a routerLink="/" class="btn btn-sm btn-outline-primary ms-2">
+        <i class="fas fa-arrow-left me-1"></i> Continue Shopping
+      </a>
+    </div>
+
+    <div
+      *ngFor="let item of cartItems; let i = index"
+      class="card cart-card mb-4"
+    >
+      <div class="row g-0 align-items-center">
+        <div class="col-md-3 text-center">
+          <img
+            [src]="item.productId?.image || item.image"
+            alt="Product image"
+            class="img-fluid cart-image"
+          />
+        </div>
+        <div class="col-md-9">
+          <div class="card-body">
+            <h5 class="card-title mb-1">
+              {{ item.productId?.name || item.name }}
+            </h5>
+            <p class="card-text mb-2 text-muted small">
+              {{ item.productId?.description || item.description }}
+            </p>
+            <p class="card-text mb-3 fw-semibold price">
+              $ {{ item.productId?.price || item.price }}
+            </p>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="removeItem(i)"
+            >
+              <i class="fas fa-trash-alt me-1"></i> Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="cartItems.length > 0"
+      class="d-flex justify-content-between align-items-center summary-bar"
+    >
+      <h5 class="fw-bold mb-0">Total: ${{ getTotalPrice() }}</h5>
+      <a routerLink="/products" class="btn btn-outline-primary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Continue Shopping
+      </a>
+    </div>
+  </div>
+</div>

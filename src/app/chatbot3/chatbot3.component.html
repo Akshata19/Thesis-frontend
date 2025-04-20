@@ -1,0 +1,112 @@
+<div *ngIf="isChatOpen" class="chat-container">
+  <div class="chat-header">
+    <img
+      src="assets/images/logo1.png"
+      alt="Assistant Avatar"
+      class="chat-avatar"
+    />
+    <span>ShopSphere virtual assistant</span>
+    <button class="minimize-button" (click)="isMinimized = !isMinimized">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <rect x="4" y="11" width="16" height="2" fill="#333" />
+      </svg>
+    </button>
+    <button class="close-button" (click)="confirmEndChat()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+        <path
+          d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <div class="chat-body">
+    <div *ngFor="let message of messages">
+      <div
+        class="message-wrapper"
+        [ngClass]="{
+          'align-right': message.sender === 'You',
+          'align-left': message.sender === 'Bot'
+        }"
+      >
+        <div
+          *ngIf="message.text"
+          class="message-wrapper"
+          [ngClass]="{
+            'align-right': message.sender === 'You',
+            'align-left': message.sender === 'Bot'
+          }"
+        >
+          <div
+            class="message-container"
+            [ngClass]="
+              message.sender === 'You' ? 'user-message' : 'bot-message'
+            "
+          >
+            <div class="message-text">{{ message.text }}</div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="message.image" class="bot-image">
+        <img [src]="message.image" alt="Bot image" />
+      </div>
+      <div *ngIf="message.isButtonGroup" class="button-stack">
+        <button
+          *ngFor="let btn of message.buttons"
+          (click)="handleButtonClick(btn.payload, btn.title)"
+        >
+          {{ btn.title }}
+        </button>
+      </div>
+
+      <div
+        class="message-timestamp"
+        [ngClass]="{
+          'timestamp-right': message.sender === 'You',
+          'timestamp-left': message.sender === 'Bot'
+        }"
+      >
+        {{ message.time }}
+      </div>
+    </div>
+    <div class="message-wrapper align-left" *ngIf="isTyping">
+      <div class="message-container bot-message">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <button class="burger-button" (click)="openMenu()">
+      <svg width="24" height="24" viewBox="0 0 24 24">
+        <path fill="#333" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
+      </svg>
+    </button>
+    <input
+      type="text"
+      [(ngModel)]="userMessage"
+      placeholder="Type your message..."
+      (keydown.enter)="sendMessage()"
+    />
+    <!-- <button (click)="sendMessage()">Send</button> -->
+  </div>
+
+  <div class="persistent-menu" *ngIf="showMenu">
+    <ul>
+      <li (click)="confirmEndChat()">End Chat</li>
+      <li (click)="menuOptions()">Menu Options</li>
+    </ul>
+  </div>
+
+  <div class="confirmation-content" *ngIf="showConfirmationDialog">
+    <div style="font-size: 15px">Do you really want to close the chat?</div>
+    <div class="confirmation-buttons">
+      <button class="confirm-btn" (click)="endChatConfirmed()">
+        Close the chat
+      </button>
+      <button class="cancel-btn" (click)="cancelEndChat()">Cancel</button>
+    </div>
+  </div>
+</div>

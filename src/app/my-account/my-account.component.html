@@ -1,0 +1,116 @@
+<div class="profile-wrapper d-flex justify-content-center align-items-start">
+  <div class="container mt-4">
+    <h2 class="text-center mb-4">Profile Details</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div
+          *ngIf="isProfileIncomplete"
+          class="alert alert-info d-flex align-items-center justify-content-center text-center border border-info"
+          role="alert"
+        >
+          <i class="fas fa-info-circle me-2"></i>
+          Please complete your profile details to enhance your experience.
+        </div>
+      </div>
+    </div>
+
+    <form
+      *ngIf="profileForm"
+      [formGroup]="profileForm"
+      (ngSubmit)="saveChanges()"
+    >
+      <div class="row g-4 align-items-start">
+        <!-- Avatar on the Left -->
+        <div class="col-md-4 text-center">
+          <div
+            class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+            style="width: 120px; height: 120px; font-size: 48px; margin: 0 auto"
+          >
+            {{ profileForm.get("username")?.value?.charAt(0).toUpperCase() }}
+          </div>
+          <p class="mt-2 fw-semibold">
+            {{ profileForm.get("username")?.value }}
+          </p>
+        </div>
+
+        <!-- Fields on the Right -->
+        <div class="col-md-8">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="username" class="form-label">Username</label>
+              <input
+                id="username"
+                class="form-control"
+                formControlName="username"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="email" class="form-label">Email</label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                formControlName="email"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">First Name</label>
+              <input
+                id="firstName"
+                class="form-control"
+                formControlName="firstName"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input
+                id="lastName"
+                class="form-control"
+                formControlName="lastName"
+              />
+            </div>
+
+            <div class="col-12">
+              <label for="address" class="form-label">Address</label>
+              <textarea
+                id="address"
+                rows="3"
+                class="form-control"
+                formControlName="address"
+              ></textarea>
+            </div>
+          </div>
+          <div class="text-end mt-4">
+            <button
+              *ngIf="!isEditMode"
+              type="button"
+              class="btn btn-outline-primary me-2"
+              (click)="enableEdit()"
+            >
+              <i class="fas fa-pen me-1"></i> Update Account
+            </button>
+
+            <button
+              *ngIf="isEditMode"
+              type="submit"
+              class="btn btn-primary me-2"
+            >
+              <i class="fas fa-save me-1"></i> Save Changes
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="deleteAccount()"
+            >
+              <i class="fas fa-trash-alt me-1"></i> Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

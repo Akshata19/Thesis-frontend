@@ -1,0 +1,57 @@
+<div style="background-color: ghostwhite">
+  <app-navbar
+    (helpClicked)="openChat(1)"
+    (helpClicked1)="openChat(2)"
+    (helpClicked3)="openChat(3)"
+    (helpClicked4)="openChat(4)"
+    (helpClicked5)="openChat(5)"
+  ></app-navbar>
+
+  <app-chattbot
+    *ngIf="chatVisible"
+    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    (close)="closeChat()"
+  ></app-chattbot>
+  <app-chatbot2
+    *ngIf="chatVisible1"
+    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    (close)="closeChat1()"
+  ></app-chatbot2>
+  <app-chatbot3
+    *ngIf="chatVisible3"
+    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [username]="this.username"
+    (close)="closeChat3()"
+  ></app-chatbot3>
+  <app-chatbot4
+    *ngIf="chatVisible4"
+    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [username]="this.username"
+    (close)="closeChat4()"
+    (minimize)="handleMinimize()"
+  ></app-chatbot4>
+  <app-chatbot5
+    *ngIf="chatVisible5"
+    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    (close)="closeChat5()"
+  ></app-chatbot5>
+  <router-outlet></router-outlet>
+
+  <!-- Floating Chatbot Icon -->
+  <div
+    class="chatbot-launcher"
+    (click)="toggleChatOptions()"
+    *ngIf="!isAnyChatbotOpen()"
+  >
+    <i class="fas fa-comments"></i>
+  </div>
+
+  <!-- Chatbot Options Menu -->
+  <div class="chatbot-options" *ngIf="chatOptionsVisible">
+    <button (click)="openChat(1)">Chatbot 1.0</button>
+    <button (click)="openChat(2)">Chatbot 2.0</button>
+    <button (click)="openChat(3)">Chatbot 3.0</button>
+    <button (click)="openChat(4)">Chatbot 4.0</button>
+    <button (click)="openChat(5)">Chatbot 5.0</button>
+  </div>
+</div>
