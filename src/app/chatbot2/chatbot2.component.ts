@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-chatbot2',
@@ -18,8 +19,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class Chatbot2Component {
   @Output() close = new EventEmitter<void>();
-  @Input() chatbotEndpoint: string =
-    'http://localhost:5005/webhooks/rest/webhook';
+  @Input() chatbotEndpoint: string = environment.rasaEndpoint;
+
   userMessage = '';
   isTyping = false;
   isChatOpen = true;

@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environment/environment';
 interface ChatMessage {
   text?: string;
   sender: string;
@@ -26,8 +27,7 @@ interface ChatMessage {
 })
 export class Chatbot4Component {
   @Output() close = new EventEmitter<void>();
-  @Input() chatbotEndpoint: string =
-    'http://localhost:5005/webhooks/rest/webhook';
+  @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() username: string = 'User';
   @Output() minimize = new EventEmitter<void>();
 
@@ -158,7 +158,7 @@ export class Chatbot4Component {
     this.userMessage = '';
     this.isTyping = true;
 
-    fetch('http://localhost:5005/webhooks/rest/webhook', {
+    fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sender: 'user', message: messageToSend }),

@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environment/environment';
 
 interface ChatMessage {
   text?: string;
@@ -27,8 +28,7 @@ interface ChatMessage {
 })
 export class Chatbot3Component {
   @Output() close = new EventEmitter<void>();
-  @Input() chatbotEndpoint: string =
-    'http://localhost:5005/webhooks/rest/webhook';
+  @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() username: string = 'User';
   userMessage = '';
   isTyping = false;
