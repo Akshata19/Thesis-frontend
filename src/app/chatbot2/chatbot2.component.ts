@@ -132,7 +132,7 @@ export class Chatbot2Component {
     this.userMessage = '';
     this.isTyping = true;
 
-    fetch('http://localhost:5005/webhooks/rest/webhook', {
+    fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sender: 'user', message: messageToSend }),
@@ -186,7 +186,7 @@ export class Chatbot2Component {
 
     this.isTyping = true;
 
-    fetch('http://localhost:5005/webhooks/rest/webhook', {
+    fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sender: 'user', message: payload }),

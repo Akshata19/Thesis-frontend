@@ -1,17 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-chattbot',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './chattbot.component.html',
-  styleUrl: './chattbot.component.scss'
+  styleUrl: './chattbot.component.scss',
 })
 export class ChattbotComponent {
   @Output() close = new EventEmitter<void>();
-  @Input() chatbotEndpoint: string = 'http://localhost:5005/webhooks/rest/webhook'; 
+  @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   userMessage = '';
   isTyping = false;
   isChatOpen = true;
@@ -28,28 +29,31 @@ export class ChattbotComponent {
     fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: 'user', message: 'hi' }) // triggers greet intent
+      body: JSON.stringify({ sender: 'user', message: 'hi' }), // triggers greet intent
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.length === 0) {
-          this.messages.push({ sender: 'Bot', text: "Hi! How can I help you today?" });
+          this.messages.push({
+            sender: 'Bot',
+            text: 'Hi! How can I help you today?',
+          });
           return;
         }
-  
+
         data.forEach((res: any) => {
           if (res.text && res.text.trim() !== '') {
             this.messages.push({ sender: 'Bot', text: res.text });
           }
-  
+
           if (res.buttons && res.buttons.length > 0) {
             this.messages.push({
               sender: 'Bot',
               isButtonGroup: true,
-              buttons: res.buttons
+              buttons: res.buttons,
             });
           }
-  
+
           if (res.image) {
             this.messages.push({ sender: 'Bot', image: res.image });
           }
@@ -57,18 +61,21 @@ export class ChattbotComponent {
       })
       .catch((error) => {
         console.error('Initial greet error:', error);
-        this.messages.push({ sender: 'Bot', text: 'Something went wrong starting the chat.' });
+        this.messages.push({
+          sender: 'Bot',
+          text: 'Something went wrong starting the chat.',
+        });
       });
   }
   sendMessage(): void {
     if (this.userMessage.trim() === '') return;
-  
+
     const messageToSend = this.userMessage;
     this.messages.push({ sender: 'You', text: messageToSend });
     this.userMessage = '';
     this.isTyping = true;
-  
-    fetch('http://localhost:5005/webhooks/rest/webhook', {
+
+    fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sender: 'user', message: messageToSend }),
@@ -76,45 +83,50 @@ export class ChattbotComponent {
       .then((response) => response.json())
       .then((data) => {
         this.isTyping = false;
-  
+
         if (data.length === 0) {
-          this.messages.push({ sender: 'Bot', text: "Sorry, I didn't get that." });
+          this.messages.push({
+            sender: 'Bot',
+            text: "Sorry, I didn't get that.",
+          });
           return;
         }
-  
+
         data.forEach((res: any) => {
           if (res.text && res.text.trim() !== '') {
             this.messages.push({ sender: 'Bot', text: res.text });
           }
-          
+
           if (res.buttons && res.buttons.length > 0) {
             this.messages.push({
               sender: 'Bot',
               isButtonGroup: true,
-              buttons: res.buttons
+              buttons: res.buttons,
             });
           }
-  
+
           if (res.image) {
             this.messages.push({ sender: 'Bot', image: res.image });
           }
-
         });
       })
       .catch((error) => {
         this.isTyping = false;
         console.error('Error:', error);
-        this.messages.push({ sender: 'Bot', text: 'Something went wrong. Please try again later.' });
+        this.messages.push({
+          sender: 'Bot',
+          text: 'Something went wrong. Please try again later.',
+        });
       });
   }
-  
+
   handleButtonClick(payload: string, title: string): void {
     // Display the button text (title) as user's message
     this.messages.push({ sender: 'You', text: title });
-  
+
     this.isTyping = true;
-  
-    fetch('http://localhost:5005/webhooks/rest/webhook', {
+
+    fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sender: 'user', message: payload }),
@@ -122,25 +134,28 @@ export class ChattbotComponent {
       .then((response) => response.json())
       .then((data) => {
         this.isTyping = false;
-  
+
         if (data.length === 0) {
-          this.messages.push({ sender: 'Bot', text: "Sorry, I didn't get that." });
+          this.messages.push({
+            sender: 'Bot',
+            text: "Sorry, I didn't get that.",
+          });
           return;
         }
-  
+
         data.forEach((res: any) => {
           if (res.text && res.text.trim() !== '') {
             this.messages.push({ sender: 'Bot', text: res.text });
           }
-  
+
           if (res.buttons && res.buttons.length > 0) {
             this.messages.push({
               sender: 'Bot',
               isButtonGroup: true,
-              buttons: res.buttons
+              buttons: res.buttons,
             });
           }
-  
+
           if (res.image) {
             this.messages.push({ sender: 'Bot', image: res.image });
           }
@@ -149,10 +164,13 @@ export class ChattbotComponent {
       .catch((error) => {
         this.isTyping = false;
         console.error('Error:', error);
-        this.messages.push({ sender: 'Bot', text: 'Something went wrong. Please try again later.' });
+        this.messages.push({
+          sender: 'Bot',
+          text: 'Something went wrong. Please try again later.',
+        });
       });
   }
-  
+
   closeChat(): void {
     this.close.emit();
   }

@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-categories',
@@ -31,7 +32,7 @@ export class CategoriesComponent implements OnInit {
 
   // Fetch all categories from the backend
   fetchCategories(): void {
-    this.http.get<any>('http://localhost:3000/api/categories').subscribe(
+    this.http.get<any>(`${environment.backendUrl}/api/categories`).subscribe(
       (response) => {
         if (response.success) {
           // Example: Add default images if none exist
@@ -68,7 +69,7 @@ export class CategoriesComponent implements OnInit {
     this.btnDisabled = true;
     const categoryData = { name: this.newCategory };
     this.http
-      .post<any>('http://localhost:3000/api/categories', categoryData)
+      .post<any>(`${environment.backendUrl}/api/categories`, categoryData)
       .subscribe(
         (response) => {
           if (response.success) {

@@ -29,7 +29,7 @@
         </ul>
       </div>
     </div>
-    <button class="minimize-button" (click)="minimize.emit()">
+    <button class="minimize-button" (click)="minimizeChat()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
@@ -169,6 +169,6 @@
     </div>
   </div>
 </div>
-<div *ngIf="isMinimized" class="chat-minimized" (click)="restoreChat()">
+<div *ngIf="isMinimized" class="chat-minimized" (click)="isMinimized = false">
   <img src="assets/images/chat.png" alt="Chatbot Icon" />
 </div>

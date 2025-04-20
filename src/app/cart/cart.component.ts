@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-cart',
@@ -30,14 +31,16 @@ export class CartComponent {
   }
 
   fetchCart(userId: string): void {
-    this.http.get<any>(`http://localhost:3000/api/cart/${userId}`).subscribe({
-      next: (res: { cart: { items: never[] } }) => {
-        this.cartItems = res.cart?.items || [];
-      },
-      error: (err: any) => {
-        Swal.fire('Error', 'Could not load cart', 'error');
-      },
-    });
+    this.http
+      .get<any>(`${environment.backendUrl}/api/cart/${userId}`)
+      .subscribe({
+        next: (res: { cart: { items: never[] } }) => {
+          this.cartItems = res.cart?.items || [];
+        },
+        error: (err: any) => {
+          Swal.fire('Error', 'Could not load cart', 'error');
+        },
+      });
   }
 
   removeItem(index: number): void {

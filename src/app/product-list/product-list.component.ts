@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-product-list',
@@ -52,7 +53,7 @@ export class ProductListComponent implements OnInit {
   }
 
   fetchProducts(): void {
-    this.http.get<any>('http://localhost:3000/api/products').subscribe(
+    this.http.get<any>(`${environment.backendUrl}/api/products`).subscribe(
       (response) => {
         if (response.success) {
           this.products = response.products;
@@ -116,7 +117,7 @@ export class ProductListComponent implements OnInit {
     if (this.user?._id) {
       // Logged-in user logic
       this.http
-        .post('http://localhost:3000/api/cart/add', {
+        .post(`${environment.backendUrl}/api/cart/add`, {
           userId: this.user._id,
           productId: product._id,
         })

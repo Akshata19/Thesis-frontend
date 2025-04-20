@@ -10,6 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2'; // 💡 SweetAlert2
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-my-account',
@@ -53,7 +54,7 @@ export class MyAccountComponent {
     this.profileForm.disable();
 
     this.http
-      .get<any>(`http://localhost:3000/api/users/${this.userId}`)
+      .get<any>(`${environment.backendUrl}/api/users/${this.userId}`)
       .subscribe(
         (res) => {
           const user = res.user;
@@ -89,16 +90,26 @@ export class MyAccountComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         const userId = this.authService.currentUser?._id;
-        this.http.delete(`http://localhost:3000/api/users/${userId}`).subscribe(
-          () => {
-            Swal.fire('Deleted!', 'Your account has been deleted.', 'success');
-            this.authService.logout();
-          },
-          (err) => {
-            console.error('Error deleting account:', err);
-            Swal.fire('Oops', 'Failed to delete account. Try again.', 'error');
-          }
-        );
+        this.http
+          .delete(`${environment.backendUrl}/api/users/${userId}`)
+          .subscribe(
+            () => {
+              Swal.fire(
+                'Deleted!',
+                'Your account has been deleted.',
+                'success'
+              );
+              this.authService.logout();
+            },
+            (err) => {
+              console.error('Error deleting account:', err);
+              Swal.fire(
+                'Oops',
+                'Failed to delete account. Try again.',
+                'error'
+              );
+            }
+          );
       }
     });
   }
@@ -109,7 +120,7 @@ export class MyAccountComponent {
       const userId = this.authService.currentUser?._id;
 
       this.http
-        .put(`http://localhost:3000/api/users/${userId}`, updatedData)
+        .put(`${environment.backendUrl}/api/users/${userId}`, updatedData)
         .subscribe(
           (res) => {
             console.log('User updated:', res);

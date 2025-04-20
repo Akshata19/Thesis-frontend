@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-products',
@@ -23,7 +24,7 @@ export class ProductsComponent implements OnInit {
   ngOnInit(): void {
     this.fetchProducts();
     this.http
-      .get<any>('http://localhost:3000/api/categories')
+      .get<any>(`${environment.backendUrl}/api/categories`)
       .subscribe((res) => {
         this.categories = res.categories;
         console.log(this.categories);
@@ -31,7 +32,7 @@ export class ProductsComponent implements OnInit {
   }
 
   fetchProducts(): void {
-    this.http.get<any>('http://localhost:3000/api/products').subscribe(
+    this.http.get<any>(`${environment.backendUrl}/api/products`).subscribe(
       (response) => {
         if (response.success) {
           this.products = response.products;

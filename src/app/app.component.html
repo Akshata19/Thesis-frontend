@@ -9,30 +9,30 @@
 
   <app-chattbot
     *ngIf="chatVisible"
-    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat()"
   ></app-chattbot>
   <app-chatbot2
     *ngIf="chatVisible1"
-    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat1()"
   ></app-chatbot2>
   <app-chatbot3
     *ngIf="chatVisible3"
-    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [chatbotEndpoint]="chatbotEndpont"
     [username]="this.username"
     (close)="closeChat3()"
   ></app-chatbot3>
   <app-chatbot4
     *ngIf="chatVisible4"
-    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [chatbotEndpoint]="chatbotEndpont"
     [username]="this.username"
     (close)="closeChat4()"
     (minimize)="handleMinimize()"
   ></app-chatbot4>
   <app-chatbot5
     *ngIf="chatVisible5"
-    [chatbotEndpoint]="'http://localhost:5005/webhooks/rest/webhook'"
+    [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat5()"
   ></app-chatbot5>
   <router-outlet></router-outlet>

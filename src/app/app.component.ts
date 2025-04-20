@@ -8,6 +8,7 @@ import { AuthService } from './services/auth.service';
 import { Chatbot3Component } from './chatbot3/chatbot3.component';
 import { Chatbot4Component } from './chatbot4/chatbot4.component';
 import { Chatbot5Component } from './chatbot5/chatbot5.component';
+import { environment } from '../environment/environment';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,7 @@ export class AppComponent {
   title = 'ecommerce-frontend';
   isCollapsed = true;
   isMinimized: boolean = false;
-
+  chatbotEndpont = environment.rasaEndpoint;
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {

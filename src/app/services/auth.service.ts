@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<any>(null);
   user$ = this.userSubject.asObservable();
 
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = `${environment.backendUrl}/api/auth`;
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadUserFromStorage(); // Load user on init
