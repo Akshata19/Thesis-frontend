@@ -8,7 +8,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-chatbot5',
@@ -19,7 +18,8 @@ import { environment } from '../../environment/environment';
 })
 export class Chatbot5Component {
   @Output() close = new EventEmitter<void>();
-  @Input() chatbotEndpoint: string = environment.rasaEndpoint;
+  @Input() chatbotEndpoint: string =
+    'http://localhost:5005/webhooks/rest/webhook';
 
   userMessage = '';
   isTyping = false;
@@ -27,15 +27,23 @@ export class Chatbot5Component {
   latestButtons: { title: string; payload: string }[] = [];
   showMenu: boolean = false;
   @ViewChild('chatBody') private chatBody!: ElementRef;
-
+  isMinimized: boolean = false;
+  isLeftMenuOpen: boolean = false;
+  showConfirmationDialog = false;
+  @Output() minimize = new EventEmitter<void>();
+  showClose: boolean = false;
   messages: {
     text?: string;
     sender: string;
     image?: string;
     isButtonGroup?: boolean;
     buttons?: { title: string; payload: string }[];
+    time?: string;
   }[] = [];
   chatStartTime: string = '';
+  isChatEnded: boolean = false;
+  chatEndTime: string = '';
+
   ngOnInit(): void {
     this.isTyping = true;
     const now = new Date();
@@ -160,5 +168,33 @@ export class Chatbot5Component {
       console.log('Selected file:', file);
       // Optional: send to backend, preview, etc.
     }
+  }
+
+  toggleMinimize(): void {
+    this.isMinimized = !this.isMinimized;
+  }
+
+  toggleLeftMenu(): void {
+    this.isLeftMenuOpen = !this.isLeftMenuOpen;
+  }
+
+  handleMainMenu(): void {
+    this.isLeftMenuOpen = false;
+    this.menuOptions();
+  }
+
+  handleCloseChat(): void {
+    this.isLeftMenuOpen = false;
+    this.closeChat();
+  }
+
+  confirmEndChat(): void {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    this.chatEndTime = `${hours}:${minutes}`;
+    this.isChatEnded = true;
+    this.showClose = true;
+    this.showMenu = false;
   }
 }
