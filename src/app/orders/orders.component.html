@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">My Orders</h2>
+
+  <div *ngIf="orders.length === 0" class="alert alert-info text-center">
+    You have not placed any orders yet.
+  </div>
+
+  <div *ngFor="let order of orders" class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Order ID: {{ order._id }}</h5>
+      <p class="card-text">Tracking ID: {{ order.trackingId }}</p>
+      <p class="card-text">
+        Status: <strong>{{ order.status }}</strong>
+      </p>
+      <p class="card-text">Placed At: {{ order.placedAt | date : "medium" }}</p>
+
+      <ul class="list-group mt-3">
+        <li
+          *ngFor="let item of order.items"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <span>{{ item.productId.name }}</span>
+          <span class="badge bg-primary rounded-pill"
+            >${{ item.productId.price }}</span
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -32,12 +32,13 @@ export class AppComponent {
   isCollapsed = true;
   isMinimized: boolean = false;
   chatbotEndpont = environment.rasaEndpoint;
+  user: any = null;
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.user$.subscribe((user: string | null) => {
       if (user) {
-        this.username = user;
+        this.user = user;
       }
     });
   }

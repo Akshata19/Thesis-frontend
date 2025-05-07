@@ -11,6 +11,7 @@
     *ngIf="chatVisible"
     [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat()"
+    [userId]="user?._id"
   ></app-chattbot>
   <app-chatbot2
     *ngIf="chatVisible1"

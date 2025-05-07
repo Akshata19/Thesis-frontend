@@ -196,5 +196,6 @@ export class Chatbot5Component {
     this.isChatEnded = true;
     this.showClose = true;
     this.showMenu = false;
+    this.latestButtons = [];
   }
 }

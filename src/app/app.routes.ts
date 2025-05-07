@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ChattbotComponent } from './chattbot/chattbot.component';
 import { MyAccountComponent } from './my-account/my-account.component';
+import { OrdersComponent } from './orders/orders.component';
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent }, // Default route
   { path: 'products', component: ProductsComponent },
@@ -22,4 +23,5 @@ export const appRoutes: Routes = [
   { path: 'chat', component: ChattbotComponent },
   { path: 'account', component: MyAccountComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'my-orders', component: OrdersComponent },
 ];

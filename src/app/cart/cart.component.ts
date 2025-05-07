@@ -44,11 +44,51 @@ export class CartComponent {
   }
 
   removeItem(index: number): void {
-    this.cartItems.splice(index, 1);
-    if (!this.user?._id) {
-      localStorage.setItem('guest_cart', JSON.stringify(this.cartItems));
+    const item = this.cartItems[index];
+
+    if (!this.user?._id || !item?.productId) {
+      return;
     }
-    Swal.fire('Removed', 'Item removed from cart.', 'info');
+
+    this.http
+      .post(`${environment.backendUrl}/api/cart/remove`, {
+        userId: this.user._id,
+        productId: item.productId._id,
+      })
+      .subscribe({
+        next: () => {
+          this.cartItems.splice(index, 1);
+          Swal.fire('Removed', 'Item removed from cart.', 'info');
+        },
+        error: () => {
+          Swal.fire('Error', 'Could not remove item from server.', 'error');
+        },
+      });
+  }
+  placeOrder(): void {
+    if (!this.user?._id) return;
+
+    this.http
+      .post(`${environment.backendUrl}/api/orders/place`, {
+        userId: this.user._id,
+      })
+      .subscribe({
+        next: (res: any) => {
+          Swal.fire(
+            'Success',
+            `Order placed! Tracking ID: ${res.trackingId}`,
+            'success'
+          );
+          this.cartItems = [];
+        },
+        error: (err) => {
+          Swal.fire(
+            'Error',
+            err.error?.message || 'Could not place the order.',
+            'error'
+          );
+        },
+      });
   }
 
   getTotalPrice(): number {
@@ -57,5 +97,18 @@ export class CartComponent {
       const qty = item.quantity || 1;
       return sum + price * qty;
     }, 0);
+  }
+
+  fetchOrders(): void {
+    this.http
+      .get(`${environment.backendUrl}/api/orders/${this.user._id}`)
+      .subscribe({
+        next: (res: any) => {
+          console.log('Orders:', res.orders); // Replace this with display logic
+        },
+        error: () => {
+          Swal.fire('Error', 'Could not fetch orders', 'error');
+        },
+      });
   }
 }
