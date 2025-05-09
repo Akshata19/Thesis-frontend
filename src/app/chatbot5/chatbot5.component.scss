@@ -165,6 +165,8 @@
 
     .message-text {
       line-height: 1.4;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
     }
 
     /* ✅ Bot Message Bubble */

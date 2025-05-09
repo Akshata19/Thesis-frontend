@@ -30,6 +30,7 @@ export class Chatbot3Component {
   @Output() close = new EventEmitter<void>();
   @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() username: string = 'User';
+  @Input() userId: string = '';
   userMessage = '';
   isTyping = false;
   isChatOpen = true;
@@ -53,7 +54,7 @@ export class Chatbot3Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: 'user',
+        sender: this.userId,
         message: 'Hello from second bot',
       }),
     })
@@ -148,7 +149,7 @@ export class Chatbot3Component {
     fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: 'user', message: messageToSend }),
+      body: JSON.stringify({ sender: this.userId, message: messageToSend }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -217,7 +218,7 @@ export class Chatbot3Component {
     fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: 'user', message: payload }),
+      body: JSON.stringify({ sender: this.userId, message: payload }),
     })
       .then((response) => response.json())
       .then((data) => {

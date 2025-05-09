@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environment/environment';
+import { FeedbackFormComponent } from '../feedback-form/feedback-form.component';
+import { ConsentComponent } from '../consent/consent.component';
 
 @Component({
   selector: 'app-chattbot',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FeedbackFormComponent, ConsentComponent],
   templateUrl: './chattbot.component.html',
   styleUrl: './chattbot.component.scss',
 })
@@ -14,10 +16,13 @@ export class ChattbotComponent {
   @Output() close = new EventEmitter<void>();
   @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() userId: string = '';
+  showConsentDialog = true;
   userMessage = '';
   isTyping = false;
   isChatOpen = true;
-
+  currentDay: Date = new Date();
+  showChat = false;
+  showFeedbackForm = false;
   messages: {
     text?: string;
     sender: string;
@@ -25,8 +30,11 @@ export class ChattbotComponent {
     isButtonGroup?: boolean;
     buttons?: { title: string; payload: string }[];
   }[] = [];
-  ngOnInit(): void {
-    this.sendToRasa('hi'); // Simulate greet on load
+  ngOnInit(): void {}
+  onConsentAccepted(): void {
+    this.showConsentDialog = false;
+    this.showChat = true;
+    this.sendToRasa('hi'); // Begin conversation after consent
   }
 
   sendMessage(): void {
@@ -96,6 +104,13 @@ export class ChattbotComponent {
   }
 
   closeChat(): void {
+    //this.close.emit();
+    this.showChat = false;
+    this.showFeedbackForm = !this.showFeedbackForm;
+  }
+
+  onFeedbackComplete(): void {
+    this.isChatOpen = false; // now window can close after thank you
     this.close.emit();
   }
 }

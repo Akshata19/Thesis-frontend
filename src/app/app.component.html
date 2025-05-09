@@ -17,12 +17,14 @@
     *ngIf="chatVisible1"
     [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat1()"
+    [userId]="user?._id"
   ></app-chatbot2>
   <app-chatbot3
     *ngIf="chatVisible3"
     [chatbotEndpoint]="chatbotEndpont"
     [username]="this.username"
     (close)="closeChat3()"
+    [userId]="user?._id"
   ></app-chatbot3>
   <app-chatbot4
     *ngIf="chatVisible4"
@@ -30,12 +32,14 @@
     [username]="this.username"
     (close)="closeChat4()"
     (minimize)="handleMinimize()"
+    [userId]="user?._id"
   ></app-chatbot4>
   <app-chatbot5
     *ngIf="chatVisible5"
     [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat5()"
     (minimize)="handleMinimize()"
+    [userId]="user?._id"
   ></app-chatbot5>
   <router-outlet></router-outlet>
 

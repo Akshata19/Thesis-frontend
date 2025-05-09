@@ -1,5 +1,5 @@
 <div *ngIf="isChatOpen" class="chat-container">
-  <div class="chat-header">
+  <div class="chat-header" *ngIf="showChat">
     <img
       src="assets/images/avatar.png"
       alt="Assistant Avatar"
@@ -8,8 +8,15 @@
     <span>Chat with Assistant</span>
     <button (click)="closeChat()">×</button>
   </div>
-
-  <div class="chat-body">
+  <app-consent
+    *ngIf="showConsentDialog"
+    [chatbotVersion]="'Chatbot 1'"
+    (accepted)="onConsentAccepted()"
+  ></app-consent>
+  <div class="chat-body" *ngIf="showChat">
+    <div class="chat-day">
+      {{ currentDay | date : "fullDate" }}
+    </div>
     <div *ngFor="let message of messages">
       <div
         class="message-wrapper"
@@ -19,20 +26,19 @@
         }"
       >
         <div
-          *ngIf="message.text"
-          class="message-wrapper"
-          [ngClass]="{
-            'align-right': message.sender === 'You',
-            'align-left': message.sender === 'Bot'
-          }"
+          class="message-container"
+          [ngClass]="message.sender === 'You' ? 'user-message' : 'bot-message'"
         >
-          <div
-            class="message-container"
-            [ngClass]="
-              message.sender === 'You' ? 'user-message' : 'bot-message'
-            "
-          >
-            <div class="message-text">{{ message.text }}</div>
+          <div class="message-text">{{ message.text }}</div>
+
+          <!-- Quick Reply Buttons inside Bot Messages -->
+          <div *ngIf="message.isButtonGroup" class="quick-reply-buttons">
+            <button
+              *ngFor="let btn of message.buttons"
+              (click)="handleButtonClick(btn.payload, btn.title)"
+            >
+              {{ btn.title }}
+            </button>
           </div>
         </div>
       </div>
@@ -40,16 +46,6 @@
       <!-- Bot image -->
       <div *ngIf="message.image" class="bot-image">
         <img [src]="message.image" alt="Bot image" />
-      </div>
-
-      <!-- Suggested reply buttons -->
-      <div *ngIf="message.isButtonGroup" class="button-stack">
-        <button
-          *ngFor="let btn of message.buttons"
-          (click)="handleButtonClick(btn.payload, btn.title)"
-        >
-          {{ btn.title }}
-        </button>
       </div>
     </div>
 
@@ -59,7 +55,7 @@
     </div>
   </div>
 
-  <div class="chat-footer">
+  <div class="chat-footer" *ngIf="showChat">
     <input
       type="text"
       [(ngModel)]="userMessage"
@@ -67,4 +63,9 @@
     />
     <button (click)="sendMessage()">Send</button>
   </div>
+
+  <app-feedback-form
+    *ngIf="showFeedbackForm"
+    (feedbackComplete)="onFeedbackComplete()"
+  ></app-feedback-form>
 </div>

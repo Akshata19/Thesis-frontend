@@ -30,6 +30,7 @@ export class Chatbot4Component {
   @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() username: string = 'User';
   @Output() minimize = new EventEmitter<void>();
+  @Input() userId: string = '';
 
   userMessage = '';
   isTyping = false;
@@ -66,7 +67,7 @@ export class Chatbot4Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: 'user',
+        sender: this.userId,
         message: 'Hello from second bot',
       }),
     })
@@ -161,7 +162,7 @@ export class Chatbot4Component {
     fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: 'user', message: messageToSend }),
+      body: JSON.stringify({ sender: this.userId, message: messageToSend }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -230,7 +231,7 @@ export class Chatbot4Component {
     fetch(environment.rasaEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: 'user', message: payload }),
+      body: JSON.stringify({ sender: this.userId, message: payload }),
     })
       .then((response) => response.json())
       .then((data) => {

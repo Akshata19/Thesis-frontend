@@ -1,0 +1,187 @@
+<div class="form-header">
+  <!-- top‑right close button -->
+
+  <h2><i class="fas fa-robot"></i> {{ chatbotVersion }} Feedback Form</h2>
+  <button
+    type="button"
+    class="close-btn"
+    aria-label="Close feedback form"
+    (click)="cancel()"
+  >
+    <svg
+      class="icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 384 512"
+      width="16"
+      height="16"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        fill="currentColor"
+        d="M342.6 150.6a32 32 0 0 0 0-45.2 32 32 0 0 0-45.2 0L192 210.7
+         86.6 105.4a32 32 0 0 0-45.2 0 32 32 0 0 0 0 45.2L146.7 256
+         41.4 361.4a32 32 0 0 0 0 45.2 32 32 0 0 0 45.2 0L192 301.3
+         297.4 406.6a32 32 0 0 0 45.2 0 32 32 0 0 0 0-45.2L237.3 256
+         342.6 150.6Z"
+      />
+    </svg>
+  </button>
+</div>
+<div class="feedback-intro">
+  <p>
+    <i class="fas fa-info-circle"></i> We’re evaluating user experience in
+    chatbot interfaces. Please assess how each interface element contributed to
+    usability, communication clarity, and interaction flow.
+  </p>
+  <p class="highlight">
+    Only relevant design elements are listed. Your feedback will guide future
+    chatbot UI improvements.
+  </p>
+  <p class="scale">
+    (Use a scale from <strong>1 = Poor</strong> to
+    <strong>5 = Excellent</strong>.)
+  </p>
+</div>
+
+<form *ngIf="!submitted" [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+  <fieldset>
+    <legend><i class="fas fa-user"></i> User Details</legend>
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input id="name" type="text" formControlName="name" />
+    </div>
+    <div class="form-group">
+      <label for="age">Age:</label>
+      <input id="age" type="number" formControlName="age" />
+    </div>
+    <div class="form-group">
+      <label for="gender">Gender:</label>
+      <select id="gender" formControlName="gender">
+        <option value="">Select</option>
+        <option>Female</option>
+        <option>Male</option>
+        <option>Other</option>
+        <option>Prefer not to say</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="occupation">Occupation:</label>
+      <input id="occupation" type="text" formControlName="occupation" />
+    </div>
+  </fieldset>
+
+  <h4><i class="fas fa-star"></i> Interface Evaluation</h4>
+
+  <div class="rating-group">
+    <label
+      >How effective was the rounded message bubble layout in conveying dialogue
+      flow and user-bot distinction? (Pattern 1: Chat Messages)</label
+    >
+    <div class="stars">
+      <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
+        <input
+          type="radio"
+          id="chatMessage-{{ rating }}"
+          name="chatMessage"
+          formControlName="chatMessage"
+          [value]="rating"
+        />
+        <label for="chatMessage-{{ rating }}">&#9733;</label>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="rating-group">
+    <label
+      >Did the quick reply buttons embedded within chat messages support task
+      clarity and reduce cognitive load? (Pattern 4: Quick Replies)</label
+    >
+    <div class="stars">
+      <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
+        <input
+          type="radio"
+          id="quickReply-{{ rating }}"
+          name="quickReply"
+          formControlName="quickReply"
+          [value]="rating"
+        />
+        <label for="quickReply-{{ rating }}">&#9733;</label>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="rating-group">
+    <label
+      >How well did the typing indicator (left-to-right animated dots)
+      contribute to a natural and predictable interaction rhythm? (Pattern 5:
+      Typing Indicators)</label
+    >
+    <div class="stars">
+      <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
+        <input
+          type="radio"
+          id="typingIndicator-{{ rating }}"
+          name="typingIndicator"
+          formControlName="typingIndicator"
+          [value]="rating"
+        />
+        <label for="typingIndicator-{{ rating }}">&#9733;</label>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="rating-group">
+    <label
+      >Was the display of current day/date at the beginning of the chat helpful
+      in framing the context of the conversation? (Pattern 14: Information
+      Stamps)</label
+    >
+    <div class="stars">
+      <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
+        <input
+          type="radio"
+          id="informationStamp-{{ rating }}"
+          name="informationStamp"
+          formControlName="informationStamp"
+          [value]="rating"
+        />
+        <label for="informationStamp-{{ rating }}">&#9733;</label>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="rating-group">
+    <label
+      >Did the chat closure mechanism provide a clear sense of completion and
+      allow a seamless restart when reopened? (Pattern 15: Conversation
+      Reload)</label
+    >
+    <div class="stars">
+      <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
+        <input
+          type="radio"
+          id="conversationClosure-{{ rating }}"
+          name="conversationClosure"
+          formControlName="conversationClosure"
+          [value]="rating"
+        />
+        <label for="conversationClosure-{{ rating }}">&#9733;</label>
+      </ng-container>
+    </div>
+  </div>
+
+  <label
+    ><i class="fas fa-comment"></i> Comments / Suggestions:
+    <textarea formControlName="comments"></textarea>
+  </label>
+
+  <button class="submit" type="submit">
+    <i class="fas fa-paper-plane"></i> Submit Feedback
+  </button>
+</form>
+
+<div *ngIf="submitted" class="thank-you">
+  <i class="fas fa-check-circle"></i>
+  <p>Thank you for your feedback! You may now close this window.</p>
+</div>

@@ -20,6 +20,7 @@ export class Chatbot5Component {
   @Output() close = new EventEmitter<void>();
   @Input() chatbotEndpoint: string =
     'http://localhost:5005/webhooks/rest/webhook';
+  @Input() userId: string = '';
 
   userMessage = '';
   isTyping = false;
@@ -81,7 +82,7 @@ export class Chatbot5Component {
     fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: 'user', message }),
+      body: JSON.stringify({ sender: this.userId, message }),
     })
       .then((response) => response.json())
       .then((data) => {

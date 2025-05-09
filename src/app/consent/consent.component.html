@@ -1,0 +1,11 @@
+<div class="consent-dialog">
+  <p class="consent-title">
+    Please observe the following design elements in {{ chatbotVersion }}
+  </p>
+  <ul>
+    <li *ngFor="let item of observedPatterns">{{ item }}</li>
+  </ul>
+  <div class="button-wrapper">
+    <button class="consent-accept" (click)="onAccept()">I Understand</button>
+  </div>
+</div>
