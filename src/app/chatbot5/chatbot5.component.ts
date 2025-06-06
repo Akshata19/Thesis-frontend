@@ -8,11 +8,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Feedback5Component } from '../feedback5/feedback5.component';
 
 @Component({
   selector: 'app-chatbot5',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Feedback5Component],
   templateUrl: './chatbot5.component.html',
   styleUrl: './chatbot5.component.scss',
 })
@@ -33,6 +34,12 @@ export class Chatbot5Component {
   showConfirmationDialog = false;
   @Output() minimize = new EventEmitter<void>();
   showClose: boolean = false;
+  showFeedbackForm = false;
+  showChat = false;
+  initialButtons: { title: string; payload: string }[] = [
+    { title: 'A delivery, return or refund', payload: '/ask_help' },
+    { title: 'Something else', payload: '/something_else' },
+  ];
   messages: {
     text?: string;
     sender: string;
@@ -51,6 +58,7 @@ export class Chatbot5Component {
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
     this.chatStartTime = `${hours}:${minutes}`;
+    this.showChat = true;
 
     this.sendBotMessage('hi');
   }
@@ -75,7 +83,9 @@ export class Chatbot5Component {
     this.messages.push({
       sender: 'Bot',
       isButtonGroup: true,
+      buttons: this.initialButtons,
     });
+    this.latestButtons = this.initialButtons;
   }
 
   sendBotMessage(message: string): void {
@@ -143,7 +153,8 @@ export class Chatbot5Component {
   }
 
   closeChat(): void {
-    this.close.emit();
+    this.showChat = false;
+    this.showFeedbackForm = !this.showFeedbackForm;
   }
 
   downloadTranscript(): void {
@@ -198,5 +209,10 @@ export class Chatbot5Component {
     this.showClose = true;
     this.showMenu = false;
     this.latestButtons = [];
+  }
+
+  onFeedbackComplete(): void {
+    this.isChatOpen = false; // now window can close after thank you
+    this.close.emit();
   }
 }

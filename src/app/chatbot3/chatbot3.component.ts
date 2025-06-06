@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environment/environment';
+import { Feedback3Component } from '../feedback3/feedback3.component';
 
 interface ChatMessage {
   text?: string;
@@ -22,7 +23,7 @@ interface ChatMessage {
 @Component({
   selector: 'app-chatbot3',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Feedback3Component],
   templateUrl: './chatbot3.component.html',
   styleUrl: './chatbot3.component.scss',
 })
@@ -31,31 +32,34 @@ export class Chatbot3Component {
   @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() username: string = 'User';
   @Input() userId: string = '';
+  @Output() minimize = new EventEmitter<void>();
   userMessage = '';
   isTyping = false;
   isChatOpen = true;
   showMenu: boolean = false;
   isMinimized: boolean = false;
   showConfirmationDialog = false; // Controls whether the "Are you sure?" dialog is displayed
-
+  showbotFeedbackForm = false;
   initialButtons: { title: string; payload: string }[] = [
     { title: 'A delivery, return or refund', payload: '/ask_help' },
     { title: 'Something else', payload: '/something_else' },
   ];
-
+  showFeedbackForm = false;
+  selectedRating: number = 0;
   messages: ChatMessage[] = [];
-
+  showChat = false;
   @ViewChild('chatBody') private chatBody!: ElementRef;
 
   ngOnInit(): void {
     this.isTyping = true;
+    this.showChat = true;
 
     fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         sender: this.userId,
-        message: 'Hello from second bot',
+        message: 'hi',
       }),
     })
       .then((response) => response.json())
@@ -76,7 +80,7 @@ export class Chatbot3Component {
             if (index === 0) {
               this.messages.push({
                 sender: 'Bot',
-                text: `Hello ${this.username}, ${res.text}`,
+                text: res.text,
                 time: this.getCurrentTime(),
               });
             } else {
@@ -285,11 +289,18 @@ export class Chatbot3Component {
   }
 
   confirmEndChat(): void {
+    this.showMenu = !this.showMenu;
     this.showConfirmationDialog = true;
   }
-
+  confirmEndChat1(): void {
+    //this.showMenu = !this.showMenu;
+    this.showFeedbackForm = true;
+    this.showChat = false;
+  }
   endChatConfirmed(): void {
-    this.closeChat();
+    this.showConfirmationDialog = false;
+    this.showChat = false;
+    this.showFeedbackForm = true;
   }
 
   cancelEndChat(): void {
@@ -304,5 +315,25 @@ export class Chatbot3Component {
       buttons: this.initialButtons,
       time: this.getCurrentTime(),
     });
+  }
+
+  minimizeChat(): void {
+    this.minimize.emit();
+    this.isMinimized = true;
+  }
+
+  restoreChat(): void {
+    this.isMinimized = false;
+  }
+
+  onFeedbackComplete(): void {
+    this.isChatOpen = false;
+    this.close.emit();
+  }
+
+  submitFeedback(): void {
+    this.showFeedbackForm = false;
+    this.showbotFeedbackForm = true;
+    //  this.close.emit();
   }
 }

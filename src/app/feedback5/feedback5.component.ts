@@ -1,26 +1,26 @@
-import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
-  FormBuilder,
   FormGroup,
+  FormBuilder,
+  Validators,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { environment } from '../../environment/environment';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-feedback-form',
+  selector: 'app-feedback5',
   standalone: true,
   imports: [FormsModule, CommonModule, ReactiveFormsModule],
-  templateUrl: './feedback-form.component.html',
-  styleUrl: './feedback-form.component.scss',
+  templateUrl: './feedback5.component.html',
+  styleUrl: './feedback5.component.scss',
 })
-export class FeedbackFormComponent {
+export class Feedback5Component {
   feedbackForm: FormGroup;
-  chatbotVersion = 'Chatbot 1';
+  chatbotVersion = 'Chatbot 5';
   submitted = false;
 
   @Output() feedbackComplete = new EventEmitter<void>();
@@ -58,14 +58,14 @@ export class FeedbackFormComponent {
     this.http
       .post(`${environment.backendUrl}/api/feedback`, this.feedbackForm.value)
       .subscribe({
-        next: (res) => {
+        next: (res: any) => {
           this.feedbackForm.reset({ chatbotVersion: this.chatbotVersion });
           this.submitted = true;
           setTimeout(() => {
             this.feedbackComplete.emit();
           }, 3000);
         },
-        error: (err) => console.error('Submission error:', err),
+        error: (err: any) => console.error('Submission error:', err),
       });
   }
 

@@ -1,5 +1,5 @@
 <div *ngIf="isChatOpen" class="chat-container">
-  <div class="chat-header">
+  <div class="chat-header" *ngIf="showChat">
     <!-- Left menu -->
     <div class="header-menu-wrapper">
       <button class="burger-button" (click)="openMenu()">
@@ -23,20 +23,10 @@
         </ul>
       </div>
     </div>
-
-    <!-- Center avatar + title -->
-    <div class="chat-header-center">
-      <img
-        src="assets/images/logo1.png"
-        alt="Assistant Avatar"
-        class="chat-avatar"
-      />
-      <span></span>
-    </div>
-
+    <span>Chatbot 5.0</span>
     <!-- Right close button -->
     <div class="chat-header-right">
-      <button class="minimize-button" (click)="minimize.emit()">
+      <!--  <button class="minimize-button" (click)="minimize.emit()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
@@ -46,7 +36,7 @@
             d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
           />
         </svg>
-      </button>
+      </button> -->
       <button class="close-button" (click)="closeChat()" *ngIf="showClose">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
           <path
@@ -57,7 +47,7 @@
     </div>
   </div>
 
-  <div class="chat-body" #chatBody>
+  <div class="chat-body" #chatBody *ngIf="showChat">
     <!-- Chat start time (not inside a bubble) -->
     <div *ngIf="chatStartTime" class="chat-start-time">
       Chat started at {{ chatStartTime }}
@@ -67,13 +57,13 @@
       <div *ngIf="message.sender === 'SystemText'" class="chat-start-time">
         {{ message.text }}
       </div>
-      <div
+      <!-- <div
         *ngIf="message.sender === 'Bot' && !message.isButtonGroup"
         class="bot-label"
       >
         Shopsphere Assistant
       </div>
-
+-->
       <div
         class="message-wrapper"
         [ngClass]="{
@@ -81,13 +71,13 @@
           'align-left': message.sender === 'Bot'
         }"
       >
-        <ng-container
+        <!--  <ng-container
           *ngIf="message.sender === 'Bot' && !message.isButtonGroup"
         >
           <div class="image-avatar">
             <img src="assets/images/logo1.png" alt="Bot Avatar" />
           </div>
-        </ng-container>
+        </ng-container>-->
         <div
           *ngIf="message.text"
           class="message-container"
@@ -120,7 +110,7 @@
     </button>
   </div>
 
-  <div class="chat-footer">
+  <div class="chat-footer" *ngIf="showChat">
     <!-- <button class="burger-button" (click)="openMenu()">
       <svg width="24" height="24" viewBox="0 0 24 24">
         <path
@@ -162,4 +152,8 @@
       </button>
     </div>
   </div>
+  <app-feedback5
+    *ngIf="showFeedbackForm"
+    (feedbackComplete)="onFeedbackComplete()"
+  ></app-feedback5>
 </div>

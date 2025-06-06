@@ -12,7 +12,7 @@
 
     <!-- Search Bar -->
     <form
-      class="d-flex mx-auto w-50"
+      class="d-flex mx-auto w-40"
       (submit)="search(); $event.preventDefault()"
     >
       <input
@@ -51,50 +51,14 @@
           <a class="nav-link" routerLink="/products">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/cart">
-            <i class="fa fa-shopping-cart me-1"></i> Cart
-          </a>
+          <a class="nav-link" routerLink="/cart"> Cart </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/my-orders">
-            <i class="fa fa-shopping-cart me-1"></i> My Orders
-          </a>
-        </li>
-
-        <!-- Categories Dropdown -->
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="categoriesDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-          >
-            <i class="fa fa-th-large me-1"></i> Categories
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-            <li>
-              <a class="dropdown-item" routerLink="/category/electronics"
-                >Electronics</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/category/clothing"
-                >Clothing</a
-              >
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/category/mobiles"
-                >Mobile Phones</a
-              >
-            </li>
-          </ul>
+          <a class="nav-link" routerLink="/my-orders"> My Orders </a>
         </li>
       </ul>
 
-      <!-- Right-Aligned User & Help -->
       <ul class="navbar-nav ms-auto align-items-center">
-        <!-- ✅ Avatar & Dropdown if User is Logged In -->
         <li *ngIf="user && user.username" class="nav-item dropdown me-3">
           <a
             class="nav-link d-flex align-items-center dropdown-toggle"
@@ -165,38 +129,6 @@
             class="dropdown-menu dropdown-menu-end"
             aria-labelledby="helpDropdown"
           >
-            <li>
-              <a
-                class="dropdown-item"
-                href="#"
-                (click)="openHelp(); $event.preventDefault()"
-                >Chatbot 1.0</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="#"
-                (click)="openHelp1(); $event.preventDefault()"
-                >Chatbot 2.0</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="#"
-                (click)="openHelp3(); $event.preventDefault()"
-                >Chatbot 3.0</a
-              >
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="#"
-                (click)="openHelp4(); $event.preventDefault()"
-                >Chatbot 4.0</a
-              >
-            </li>
             <li>
               <a
                 class="dropdown-item"

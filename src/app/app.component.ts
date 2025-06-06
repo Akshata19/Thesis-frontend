@@ -144,7 +144,11 @@ export class AppComponent {
   }
 
   handleMinimize(): void {
-    this.closeAllChats();
+    // this.closeAllChats();
     this.isMinimized = true;
+  }
+
+  restoreChat(): void {
+    this.isMinimized = false;
   }
 }

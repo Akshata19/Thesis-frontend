@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environment/environment';
+import { Feedback4Component } from '../feedback4/feedback4.component';
 interface ChatMessage {
   text?: string;
   sender: string;
@@ -21,7 +22,7 @@ interface ChatMessage {
 @Component({
   selector: 'app-chatbot4',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Feedback4Component],
   templateUrl: './chatbot4.component.html',
   styleUrl: './chatbot4.component.scss',
 })
@@ -41,6 +42,8 @@ export class Chatbot4Component {
   showFeedbackDialog: boolean = false;
   feedbackRating: number = 0;
 
+  showFeedbackForm = false;
+  showChat = false;
   setRating(rating: number): void {
     this.feedbackRating = rating;
   }
@@ -48,7 +51,9 @@ export class Chatbot4Component {
   submitFeedback(): void {
     console.log('User feedback rating:', this.feedbackRating);
     this.showFeedbackDialog = false;
-    this.closeChat(); // Close the chat
+    this.showChat = false;
+    this.showFeedbackForm = true;
+    //this.closeChat(); // Close the chat
   }
 
   initialButtons: { title: string; payload: string }[] = [
@@ -62,13 +67,14 @@ export class Chatbot4Component {
 
   ngOnInit(): void {
     this.isTyping = true;
+    this.showChat = true;
 
     fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         sender: this.userId,
-        message: 'Hello from second bot',
+        message: 'hi',
       }),
     })
       .then((response) => response.json())
@@ -89,7 +95,7 @@ export class Chatbot4Component {
             if (index === 0) {
               this.messages.push({
                 sender: 'Bot',
-                text: `Hello ${this.username}, ${res.text}`,
+                text: res.text,
                 time: this.getCurrentTime(),
               });
             } else {
@@ -336,5 +342,10 @@ export class Chatbot4Component {
 
   restoreChat(): void {
     this.isMinimized = false;
+  }
+
+  onFeedbackComplete(): void {
+    this.isChatOpen = false; // now window can close after thank you
+    this.close.emit();
   }
 }

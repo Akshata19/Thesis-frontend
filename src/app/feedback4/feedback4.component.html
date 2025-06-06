@@ -1,34 +1,18 @@
 <div class="scroll-wrapper">
   <div class="form-header">
-    <!-- top‑right close button -->
-
-    <h2><i class="fas fa-robot"></i> {{ chatbotVersion }} Feedback Form</h2>
+    <div class="form-title">
+      <i class="fas fa-robot"></i>
+      <span>{{ chatbotVersion }} Feedback Form</span>
+    </div>
     <button
-      type="button"
-      class="close-btn"
+      class="icon-only"
       aria-label="Close feedback form"
       (click)="cancel()"
     >
-      <svg
-        class="icon"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 384 512"
-        width="16"
-        height="16"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          fill="currentColor"
-          d="M342.6 150.6a32 32 0 0 0 0-45.2 32 32 0 0 0-45.2 0L192 210.7
-         86.6 105.4a32 32 0 0 0-45.2 0 32 32 0 0 0 0 45.2L146.7 256
-         41.4 361.4a32 32 0 0 0 0 45.2 32 32 0 0 0 45.2 0L192 301.3
-         297.4 406.6a32 32 0 0 0 45.2 0 32 32 0 0 0 0-45.2L237.3 256
-         342.6 150.6Z"
-        />
-      </svg>
+      <i class="fas fa-times"></i>
     </button>
   </div>
+
   <div class="feedback-intro">
     <p>
       <i class="fas fa-info-circle"></i> We’re evaluating user experience in
@@ -47,20 +31,25 @@
 
   <form *ngIf="!submitted" [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
     <fieldset>
-      <label for="name">
-        Please enter the unique identifier you provided at the beginning of the
-        survey (the first two letters of your mother's name in capital letters,
-        followed by the last two digits of your birth year):
-      </label>
-      <input
-        id="name"
-        type="text"
-        formControlName="name"
-        placeholder="e.g., Sa1203"
-      />
+      <legend><i class="fas fa-user"></i> User Identifier</legend>
+      <div class="form-group">
+        <label for="name">
+          Please enter the unique identifier you provided at the beginning of
+          the survey (the first two letters of your mother's name in capital
+          letters, followed by the last two digits of your birth year):
+        </label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="e.g., Sa1203"
+        />
+      </div>
     </fieldset>
 
-    <h4><i class="fas fa-star"></i> Interface Evaluation</h4>
+    <h5 style="color: #2980b9">
+      <i class="fas fa-star"></i> Interface Evaluation
+    </h5>
 
     <div class="rating-group">
       <label>
@@ -85,7 +74,7 @@
 
     <div class="rating-group">
       <label>
-        How much did you like the list-style quick reply buttons?
+        How much did you like the box-shaped right aligned quick reply buttons?
         <small>1 = Didn't like at all, 5 = Liked very much</small>
       </label>
       <div class="stars">
@@ -124,26 +113,6 @@
 
     <div class="rating-group">
       <label>
-        How much did you like the timestamp at the beginning of the conversation
-        and chatbot name after each chatbot message? <br />
-        <small>1 = Didn't like at all, 5 = Liked very much</small>
-      </label>
-      <div class="stars">
-        <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
-          <input
-            type="radio"
-            id="informationStamp-{{ rating }}"
-            name="informationStamp"
-            formControlName="informationStamp"
-            [value]="rating"
-          />
-          <label for="informationStamp-{{ rating }}">&#9733;</label>
-        </ng-container>
-      </div>
-    </div>
-
-    <div class="rating-group">
-      <label>
         How much did you like the close chat and conversation ending process?
         <br />
         <small>1 = Didn't like at all, 5 = Liked very much</small>
@@ -161,27 +130,49 @@
         </ng-container>
       </div>
     </div>
+
     <div class="rating-group">
       <label>
-        How much did you like the session minimization icon? <br />
+        How much did you like the persistent menu?
         <small>1 = Didn't like at all, 5 = Liked very much</small>
       </label>
       <div class="stars">
         <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
           <input
             type="radio"
-            id="sessionMinimization-{{ rating }}"
-            name="sessionMinimization"
-            formControlName="sessionMinimization"
+            id="persistentMenu-{{ rating }}"
+            name="persistentMenu"
+            formControlName="persistentMenu"
             [value]="rating"
           />
-          <label for="sessionMinimization-{{ rating }}">&#9733;</label>
+          <label for="persistentMenu-{{ rating }}">&#9733;</label>
         </ng-container>
       </div>
     </div>
+
+    <div class="rating-group">
+      <label>
+        How much did you like the information stamp such as time and chatbot
+        name after each bot message?
+        <br />
+        <small>1 = Didn't like at all, 5 = Liked very much</small>
+      </label>
+      <div class="stars">
+        <ng-container *ngFor="let rating of [5, 4, 3, 2, 1]">
+          <input
+            type="radio"
+            id="informationStamp-{{ rating }}"
+            name="informationStamp"
+            formControlName="informationStamp"
+            [value]="rating"
+          />
+          <label for="informationStamp-{{ rating }}">&#9733;</label>
+        </ng-container>
+      </div>
+    </div>
+
     <label
-      ><i class="fas fa-comment"></i> Would you like to suggest or tell anything
-      about the chat bot user interface:
+      ><i class="fas fa-comment"></i> Comments / Suggestions:
       <textarea formControlName="comments"></textarea>
     </label>
 

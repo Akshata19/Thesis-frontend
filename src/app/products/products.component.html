@@ -73,7 +73,10 @@
             {{ product.description }}
           </p>
           <p class="fw-bold text-primary mb-2">Price: ${{ product.price }}</p>
-          <button class="btn btn-outline-primary mt-auto">
+          <button
+            class="btn btn-outline-primary mt-auto"
+            (click)="addToCart(product)"
+          >
             <i class="fas fa-cart-plus me-1"></i> Add to Cart
           </button>
         </div>

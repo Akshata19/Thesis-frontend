@@ -3,6 +3,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environment/environment';
+import Swal from 'sweetalert2';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -18,8 +20,8 @@ export class ProductsComponent implements OnInit {
   selectedCategory = '';
   priceRange = '';
   searchQuery = '';
-
-  constructor(private http: HttpClient) {}
+  user: any = null;
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.fetchProducts();
@@ -29,6 +31,11 @@ export class ProductsComponent implements OnInit {
         this.categories = res.categories;
         console.log(this.categories);
       });
+    this.authService.user$.subscribe((user) => {
+      this.user = user;
+      console.log('[User]', this.user);
+      console.log('[User ID]', this.user?._id);
+    });
   }
 
   fetchProducts(): void {
@@ -76,5 +83,41 @@ export class ProductsComponent implements OnInit {
     this.selectedCategory = '';
     this.priceRange = '';
     this.applyFilters(); // Reapply with empty filters
+  }
+
+  addToCart(product: any): void {
+    if (this.user?._id) {
+      // Logged-in user logic
+      this.http
+        .post(`${environment.backendUrl}/api/cart/add`, {
+          userId: this.user._id,
+          productId: product._id,
+        })
+        .subscribe({
+          next: () =>
+            Swal.fire({
+              icon: 'success',
+              title: 'Added to Cart',
+              text: `${product.name} has been added to your cart.`,
+              timer: 1800,
+              showConfirmButton: false,
+              toast: true,
+              position: 'top-end',
+            }),
+          error: (err) => console.error('❌ Add to cart error', err),
+        });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please log in to add items to your cart.',
+        confirmButtonText: 'Go to Login',
+        showCancelButton: true,
+      }).then((result: { isConfirmed: any }) => {
+        if (result.isConfirmed) {
+          window.location.href = '/login'; // or use Angular router
+        }
+      });
+    }
   }
 }

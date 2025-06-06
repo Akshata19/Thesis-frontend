@@ -1,17 +1,12 @@
 <div *ngIf="isChatOpen" class="chat-container">
-  <div class="chat-header">
-    <img
-      src="assets/images/logo1.png"
-      alt="Assistant Avatar"
-      class="chat-avatar"
-    />
-    <span>ShopSphere virtual assistant</span>
-    <button class="minimize-button" (click)="isMinimized = !isMinimized">
+  <div class="chat-header" *ngIf="showChat">
+    <span>Chatbot 3.0</span>
+    <!-- <button class="minimize-button" (click)="minimizeChat()">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <rect x="4" y="11" width="16" height="2" fill="#333" />
       </svg>
-    </button>
-    <button class="close-button" (click)="confirmEndChat()">
+    </button>-->
+    <button class="close-button" (click)="confirmEndChat1()">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
         <path
           d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
@@ -20,7 +15,7 @@
     </button>
   </div>
 
-  <div class="chat-body">
+  <div class="chat-body" #chatBody *ngIf="showChat">
     <div *ngFor="let message of messages">
       <div
         class="message-wrapper"
@@ -69,21 +64,18 @@
         {{ message.time }}
       </div>
     </div>
-    <div class="message-wrapper align-left" *ngIf="isTyping">
-      <div class="message-container bot-message">
-        <div class="typing-indicator">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
+    <!-- Typing Indicator -->
+    <div *ngIf="isTyping" class="typing-indicator">
+      <span>Bot is typing...</span>
     </div>
   </div>
 
-  <div class="chat-footer">
-    <button class="burger-button" (click)="openMenu()">
+  <div class="chat-footer" *ngIf="showChat">
+    <!--  <button class="burger-button" (click)="openMenu()">
       <svg width="24" height="24" viewBox="0 0 24 24">
         <path fill="#333" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
       </svg>
-    </button>
+    </button> -->
     <input
       type="text"
       [(ngModel)]="userMessage"
@@ -100,7 +92,7 @@
     </ul>
   </div>
 
-  <div class="confirmation-content" *ngIf="showConfirmationDialog">
+  <!-- <div class="confirmation-content" *ngIf="showConfirmationDialog">
     <div style="font-size: 15px">Do you really want to close the chat?</div>
     <div class="confirmation-buttons">
       <button class="confirm-btn" (click)="endChatConfirmed()">
@@ -108,5 +100,33 @@
       </button>
       <button class="cancel-btn" (click)="cancelEndChat()">Cancel</button>
     </div>
+  </div>  -->
+  <div *ngIf="showFeedbackForm" class="feedback-wrapper">
+    <div class="feedback-card">
+      <h4>How was Your experience with chatbot today?</h4>
+      <div class="stars">
+        <i
+          class="fas fa-star"
+          *ngFor="let star of [1, 2, 3, 4, 5]"
+          [ngClass]="{ selected: selectedRating >= star }"
+          (click)="selectedRating = star"
+        ></i>
+      </div>
+      <div class="labels">
+        <span>Bad</span>
+        <span>Outstanding!</span>
+      </div>
+      <button
+        class="submit-btn"
+        [disabled]="!selectedRating"
+        (click)="submitFeedback()"
+      >
+        Submit
+      </button>
+    </div>
   </div>
+  <app-feedback3
+    *ngIf="showbotFeedbackForm"
+    (feedbackComplete)="onFeedbackComplete()"
+  ></app-feedback3>
 </div>

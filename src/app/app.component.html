@@ -12,30 +12,40 @@
     [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat()"
     [userId]="user?._id"
+    [hidden]="isMinimized"
+    (minimize)="handleMinimize()"
   ></app-chattbot>
   <app-chatbot2
     *ngIf="chatVisible1"
     [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat1()"
     [userId]="user?._id"
+    [hidden]="isMinimized"
+    [username]="this.username"
+    (minimize)="handleMinimize()"
   ></app-chatbot2>
   <app-chatbot3
     *ngIf="chatVisible3"
+    [hidden]="isMinimized"
     [chatbotEndpoint]="chatbotEndpont"
     [username]="this.username"
     (close)="closeChat3()"
     [userId]="user?._id"
+    (minimize)="handleMinimize()"
   ></app-chatbot3>
   <app-chatbot4
     *ngIf="chatVisible4"
+    [hidden]="isMinimized"
     [chatbotEndpoint]="chatbotEndpont"
     [username]="this.username"
     (close)="closeChat4()"
     (minimize)="handleMinimize()"
     [userId]="user?._id"
   ></app-chatbot4>
+
   <app-chatbot5
     *ngIf="chatVisible5"
+    [hidden]="isMinimized"
     [chatbotEndpoint]="chatbotEndpont"
     (close)="closeChat5()"
     (minimize)="handleMinimize()"
@@ -43,21 +53,68 @@
   ></app-chatbot5>
   <router-outlet></router-outlet>
 
-  <!-- Floating Chatbot Icon -->
+  <!-- Floating Chatbot Icon for chatbot 1 
   <div
     class="chatbot-launcher"
-    (click)="toggleChatOptions()"
-    *ngIf="!isAnyChatbotOpen()"
+    (click)="isMinimized ? restoreChat() : openChat(1)"
+    *ngIf="!isAnyChatbotOpen() || isMinimized"
+  >
+    <i class="fas fa-comments"></i>
+  </div> -->
+  <!-- Floating Chatbot Icon for chatbot 2 
+  <div
+    class="chatbot-launcher"
+    (click)="isMinimized ? restoreChat() : openChat(2)"
+    *ngIf="!isAnyChatbotOpen() || isMinimized"
   >
     <i class="fas fa-comments"></i>
   </div>
+-->
 
-  <!-- Chatbot Options Menu -->
-  <div class="chatbot-options" *ngIf="chatOptionsVisible">
-    <button (click)="openChat(1)">Chatbot 1.0</button>
-    <button (click)="openChat(2)">Chatbot 2.0</button>
-    <button (click)="openChat(3)">Chatbot 3.0</button>
-    <button (click)="openChat(4)">Chatbot 4.0</button>
-    <button (click)="openChat(5)">Chatbot 5.0</button>
+  <!-- Floating Chatbot Icon Chatbot 3 
+  <div
+    class="chatbot-launcher"
+    (click)="isMinimized ? restoreChat() : openChat(3)"
+    *ngIf="!isAnyChatbotOpen() || isMinimized"
+  >
+    <i class="fas fa-comments"></i>
+  </div> -->
+
+  <!-- Floating Chatbot Icon Chatbot 4
+  <div
+    class="chatbot-launcher"
+    (click)="isMinimized ? restoreChat() : openChat(4)"
+    *ngIf="!isAnyChatbotOpen() || isMinimized"
+  >
+    <i class="fas fa-comments"></i>
+  </div> -->
+
+  <!-- Floating Chatbot Icon Chatbot 5 
+  <div
+    class="chatbot-launcher"
+    (click)="isMinimized ? restoreChat() : openChat(5)"
+    *ngIf="!isAnyChatbotOpen() || isMinimized"
+  >
+    <i class="fas fa-comments"></i>
+  </div>-->
+
+  <div>
+    <!-- Main floating button -->
+    <button
+      class="chatbot-launcher"
+      (click)="toggleChatOptions()"
+      *ngIf="!isAnyChatbotOpen() || isMinimized"
+    >
+      <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Chatbot Options Menu -->
+    <div class="chatbot-options" *ngIf="chatOptionsVisible">
+      <button (click)="openChat(1)">Chatbot 1.0</button>
+      <button (click)="openChat(2)">Chatbot 2.0</button>
+      <button (click)="openChat(3)">Chatbot 3.0</button>
+      <button (click)="openChat(4)">Chatbot 4.0</button>
+      <button (click)="openChat(5)">Chatbot 5.0</button>
+    </div>
   </div>
 </div>

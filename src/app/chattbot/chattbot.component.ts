@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environment/environment';
 import { FeedbackFormComponent } from '../feedback-form/feedback-form.component';
@@ -13,10 +20,12 @@ import { ConsentComponent } from '../consent/consent.component';
   styleUrl: './chattbot.component.scss',
 })
 export class ChattbotComponent {
+  @Output() minimize = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
   @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() userId: string = '';
   showConsentDialog = true;
+  isMinimized: boolean = false;
   userMessage = '';
   isTyping = false;
   isChatOpen = true;
@@ -30,13 +39,22 @@ export class ChattbotComponent {
     isButtonGroup?: boolean;
     buttons?: { title: string; payload: string }[];
   }[] = [];
-  ngOnInit(): void {}
+
+  @ViewChild('chatBody') private chatBody!: ElementRef;
+
+  ngOnInit(): void {
+    this.showChat = true;
+    this.isTyping = true;
+    this.sendToRasa('hi'); // Begin conversation after consent
+  }
   onConsentAccepted(): void {
     this.showConsentDialog = false;
     this.showChat = true;
     this.sendToRasa('hi'); // Begin conversation after consent
   }
-
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
   sendMessage(): void {
     if (this.userMessage.trim() === '') return;
 
@@ -65,33 +83,36 @@ export class ChattbotComponent {
     })
       .then((response) => response.json())
       .then((data) => {
-        this.isTyping = false;
+        setTimeout(() => {
+          this.isTyping = false;
 
-        if (data.length === 0) {
-          this.messages.push({
-            sender: 'Bot',
-            text: "Sorry, I didn't understand that.",
-          });
-          return;
-        }
-
-        data.forEach((res: any) => {
-          if (res.text?.trim()) {
-            this.messages.push({ sender: 'Bot', text: res.text });
-          }
-
-          if (res.buttons?.length) {
+          if (data.length === 0) {
             this.messages.push({
               sender: 'Bot',
-              isButtonGroup: true,
-              buttons: res.buttons,
+              text: "Sorry, I didn't understand that.",
             });
+            return;
           }
 
-          if (res.image) {
-            this.messages.push({ sender: 'Bot', image: res.image });
-          }
-        });
+          data.forEach((res: any) => {
+            if (res.text?.trim()) {
+              this.messages.push({ sender: 'Bot', text: res.text });
+            }
+
+            if (res.buttons?.length) {
+              this.messages.push({
+                sender: 'Bot',
+                isButtonGroup: true,
+                buttons: res.buttons,
+              });
+            }
+
+            if (res.image) {
+              this.messages.push({ sender: 'Bot', image: res.image });
+            }
+            this.scrollToBottom();
+          });
+        }, 1500);
       })
       .catch((error) => {
         this.isTyping = false;
@@ -112,5 +133,23 @@ export class ChattbotComponent {
   onFeedbackComplete(): void {
     this.isChatOpen = false; // now window can close after thank you
     this.close.emit();
+  }
+
+  minimizeChat(): void {
+    this.minimize.emit();
+    this.isMinimized = true;
+  }
+
+  restoreChat(): void {
+    this.isMinimized = false;
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.chatBody.nativeElement.scrollTop =
+        this.chatBody.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Scroll to bottom failed:', err);
+    }
   }
 }

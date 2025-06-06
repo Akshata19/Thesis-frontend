@@ -105,7 +105,7 @@
     .bot-message {
       background-color: white;
       padding: 10px 15px;
-      border-radius: 15px 15px 15px 0;
+      border-radius: 0 15px 15px 15px;
       align-self: flex-start;
       position: relative;
     }
@@ -117,7 +117,7 @@
       align-self: flex-end;
       position: relative;
       min-width: 60px;
-      border-radius: 15px 15px 0 15px;
+      border-radius: 15px 0 15px 15px;
     }
   }
 
@@ -432,7 +432,7 @@
 }
 
 .confirmation-buttons .confirm-btn {
-  background-color: #ff6a40;
+  background-color: #1448f3;
   color: #fff;
   padding: 4px 10px;
   font-weight: 300;

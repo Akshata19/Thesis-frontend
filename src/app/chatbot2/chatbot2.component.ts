@@ -9,11 +9,12 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environment/environment';
+import { Feedback2Component } from '../feedback2/feedback2.component';
 
 @Component({
   selector: 'app-chatbot2',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Feedback2Component],
   templateUrl: './chatbot2.component.html',
   styleUrl: './chatbot2.component.scss',
 })
@@ -21,15 +22,27 @@ export class Chatbot2Component {
   @Output() close = new EventEmitter<void>();
   @Input() chatbotEndpoint: string = environment.rasaEndpoint;
   @Input() userId: string = '';
+  @Input() username: string = 'User';
   userMessage = '';
   isTyping = false;
   isChatOpen = true;
-  username: string = '';
   email: string = '';
   isAuthenticated: boolean = false;
   lastName: string = '';
   agreedToPolicy: boolean = false;
-
+  showFeedbackForm = false;
+  selectedRating: number = 0;
+  showChat: boolean = false;
+  @Output() minimize = new EventEmitter<void>();
+  chatStartTime: string = '';
+  showbotFeedbackForm = false;
+  showMenu: boolean = false;
+  showConfirmationDialog = false;
+  initialButtons: { title: string; payload: string }[] = [
+    { title: 'A delivery, return or refund', payload: '/ask_help' },
+    { title: 'Something else', payload: '/something_else' },
+  ];
+  isMinimized: boolean = false;
   messages: {
     text?: string;
     sender: string;
@@ -39,20 +52,26 @@ export class Chatbot2Component {
   }[] = [];
 
   @ViewChild('chatBody') private chatBody!: ElementRef;
-  startChat(): void {
-    if (!this.username || !this.email) return;
-
-    this.isAuthenticated = true;
+  ngOnInit(): void {
+    this.showChat = true;
     this.isTyping = true;
-
-    const senderId = `${this.username}-${this.email}`;
-
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+    const formattedTime = now.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    this.chatStartTime = formattedDate + ' at ' + formattedTime;
     fetch(this.chatbotEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: senderId,
-        message: 'Hello from second bot',
+        sender: this.userId,
+        message: 'hi',
       }),
     })
       .then((response) => response.json())
@@ -67,17 +86,18 @@ export class Chatbot2Component {
           }, 50);
           return;
         }
-        // Process each Rasa response
         data.forEach((res: any, index: number) => {
           if (res.text && res.text.trim() !== '') {
             if (index === 0) {
-              // Append the username to the first message
               this.messages.push({
                 sender: 'Bot',
-                text: `Hello ${this.username}, ${res.text}`,
+                text: res.text,
               });
             } else {
-              this.messages.push({ sender: 'Bot', text: res.text });
+              this.messages.push({
+                sender: 'Bot',
+                text: res.text,
+              });
             }
           }
           if (res.buttons && res.buttons.length > 0) {
@@ -88,10 +108,12 @@ export class Chatbot2Component {
             });
           }
           if (res.image) {
-            this.messages.push({ sender: 'Bot', image: res.image });
+            this.messages.push({
+              sender: 'Bot',
+              image: res.image,
+            });
           }
         });
-
         setTimeout(() => {
           this.isTyping = false;
         }, 50);
@@ -104,10 +126,6 @@ export class Chatbot2Component {
           text: 'Something went wrong starting the chat.',
         });
       });
-  }
-
-  ngOnInit(): void {
-    this.isTyping = true;
   }
 
   ngAfterViewChecked() {
@@ -233,5 +251,62 @@ export class Chatbot2Component {
 
   closeChat(): void {
     this.close.emit();
+    // this.close.emit();
+  }
+
+  submitFeedback(): void {
+    this.showFeedbackForm = false;
+    this.showbotFeedbackForm = true;
+    //  this.close.emit();
+  }
+
+  onFeedbackComplete(): void {
+    this.isChatOpen = false;
+    this.close.emit();
+  }
+
+  openMenu(): void {
+    this.showMenu = !this.showMenu;
+    console.log('Persistent menu button clicked.');
+  }
+
+  endChat(): void {
+    this.closeChat();
+  }
+
+  confirmEndChat(): void {
+    this.showMenu = !this.showMenu;
+    this.showConfirmationDialog = true;
+  }
+  confirmEndChat1(): void {
+    //this.showMenu = !this.showMenu;
+    this.showConfirmationDialog = true;
+  }
+  endChatConfirmed(): void {
+    this.showConfirmationDialog = false;
+    this.showChat = false;
+    this.showbotFeedbackForm = true;
+  }
+
+  cancelEndChat(): void {
+    this.showConfirmationDialog = false;
+  }
+
+  menuOptions(): void {
+    this.showMenu = false;
+    this.messages.push({
+      sender: 'Bot',
+      isButtonGroup: true,
+      buttons: this.initialButtons,
+    });
+  }
+
+  minimizeChat(): void {
+    this.minimize.emit();
+    this.isMinimized = true;
+  }
+
+  restoreChat(): void {
+    this.isMinimized = false;
   }
 }
